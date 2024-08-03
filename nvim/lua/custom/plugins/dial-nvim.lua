@@ -15,6 +15,8 @@ return {
       default = {
         augend.integer.alias.decimal_int,
         augend.constant.alias.bool,
+        augend.constant.alias.Alpha,
+        augend.constant.alias.alpha,
         augend.date.alias["%H:%M"],
         augend.date.alias["%Y-%m-%d"],
         augend.date.alias["%Y/%m/%d"],
@@ -22,19 +24,19 @@ return {
         -- Custom augends
         augend.constant.new{
           elements = { '||', '&&' },
-          word = true,
+          word = false,
           cyclic = true,
         },
 
         augend.constant.new{
           elements = { '==', '!=' },
-          word = true,
+          word = false,
           cyclic = true,
         },
 
         augend.constant.new{
           elements = { '===', '!==' },
-          word = true,
+          word = false,
           cyclic = true,
         },
 
@@ -61,10 +63,24 @@ return {
 
     -- Keymaps
     local map = require("dial.map")
-    vim.keymap.set("n", "<C-x>", map.dec_normal(), { noremap = true, desc = "Decrement text object under cursor" })
+
     vim.keymap.set("n", "<C-a>", map.inc_normal(), { noremap = true, desc = "Increment text object under cursor" })
-    vim.keymap.set("v", "<C-x>", map.dec_visual(), { noremap = true, desc = "Decrement text object under cursor" })
+    vim.keymap.set("n", "<C-x>", map.dec_normal(), { noremap = true, desc = "Decrement text object under cursor" })
     vim.keymap.set("v", "<C-a>", map.inc_visual(), { noremap = true, desc = "Increment text object under cursor" })
+    vim.keymap.set("v", "<C-x>", map.dec_visual(), { noremap = true, desc = "Decrement text object under cursor" })
+
+    vim.keymap.set("n", "g<C-a>", function ()
+      map.manipulate("increment", "gnormal")
+    end, { noremap = true, desc = "Increment text object under cursor" })
+    vim.keymap.set("n", "g<C-x>", function ()
+      map.manipulate("decrement", "gnormal")
+    end, { noremap = true, desc = "Decrement text object under cursor" })
+    vim.keymap.set("v", "g<C-a>", function ()
+      map.manipulate("increment", "gvisual")
+    end, { noremap = true, desc = "Increment text object under cursor" })
+    vim.keymap.set("v", "g<C-x>", function ()
+      map.manipulate("decrement", "gvisual")
+    end, { noremap = true, desc = "Decrement text object under cursor" })
 
   end
 }

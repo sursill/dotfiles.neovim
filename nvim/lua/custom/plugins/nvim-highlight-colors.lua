@@ -7,7 +7,16 @@ return {
   config = function ()
     local highlight = require("nvim-highlight-colors")
     highlight.setup({
-      enable_tailwind = true
+      render = 'virtual',
+      virtual_symbol = '',
+      virtual_symbol_position = 'eow',
+      virtual_symbol_prefix = ' ',
+      virtual_symbol_suffix = '',
+
+      enable_tailwind = true,
     })
   end
 }
+
+-- Preview
+-- border: solid #a21c12; # Test color

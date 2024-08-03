@@ -526,6 +526,7 @@ vim.defer_fn(function()
       'yaml',
       'toml',
       'markdown',
+      'markdown_inline',
     },
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)

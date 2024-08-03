@@ -62,14 +62,30 @@ vim.keymap.set('v', 'p', '"_dP')
 -- Add common end character
 vim.keymap.set("n", ";;", "A;<Esc>")
 vim.keymap.set("n", ",,", "A,<Esc>")
-vim.keymap.set("i", ";;", "<Esc>A;<Esc>")
-vim.keymap.set("i", ",,", "<Esc>A,<Esc>")
+-- vim.keymap.set("i", ";;", "<Esc>A;<Esc>")
+-- vim.keymap.set("i", ",,", "<Esc>A,<Esc>")
 
 -- Resize windows with arrows
 vim.keymap.set("n", "<C-Up>", ":resize +2<CR>")
 vim.keymap.set("n", "<C-Down>", ":resize -2<CR>")
 vim.keymap.set("n", "<C-Left>", ":vertical resize -2<CR>")
 vim.keymap.set("n", "<C-Right>", ":vertical resize +2<CR>")
+
+-- Copy current buffer relative path
+vim.keymap.set(
+  "n",
+  "<leader>dr",
+  function () vim.fn.setreg('+', vim.fn.expand('%')) end,
+  { desc = 'Copy [D]ocument [R]elative path' }
+)
+
+-- Copy current buffer absolute path
+vim.keymap.set(
+  "n",
+  "<leader>da",
+  function () vim.fn.setreg('+', vim.fn.expand('%:p')) end,
+  { desc = 'Copy [D]ocument [A]bsolute path' }
+)
 
 -- Unmap the arrow keys to force learning and using Vim navigation keys
 local newbieCrutches = true
