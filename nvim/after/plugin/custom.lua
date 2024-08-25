@@ -19,6 +19,9 @@ vim.opt.relativenumber = true
 -- Make shift round to the nearest tab stop
 vim.opt.shiftround = true
 
+vim.opt.virtualedit = 'block'
+vim.opt.backupcopy = 'yes'
+
 -- Make navigation keys treat wrapped lines as separate lines
 map('n', 'j', "v:count == 0 ? 'gj' : 'j'", { noremap = true, silent = false, expr = true })
 map('n', 'k', "v:count == 0 ? 'gk' : 'k'", { noremap = true, silent = false, expr = true })
