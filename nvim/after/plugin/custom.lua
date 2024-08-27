@@ -50,7 +50,7 @@ vim.keymap.set(
 )
 
 -- Yank entire buffer
-vim.keymap.set("n", "<leader>Y", ":%y+<CR>")
+vim.keymap.set("n", "<leader>Y", ":%y+<CR>", { desc = 'Copy Entire Buffer' })
 
 -- Put text from default register to a new line
 vim.keymap.set("n", "gp", ":pu<CR>")
