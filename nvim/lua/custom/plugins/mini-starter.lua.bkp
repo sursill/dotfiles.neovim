@@ -13,12 +13,23 @@ Y88b  d88P 888  T88b  Y88b  d88P 888
  "Y8888P"  888   T88b  "Y8888P"  88888888 
 ]]
 
+local date_today = os.date(" Today is %A, %b %d")
+
+local items = {
+  -- Main Items
+  { action = ":ene <BAR> startinsert <CR>", name = "New File", section = "Quick Links"},
+  { action = "<leader>sf", name = "Search Directory", section = "Quick Links"},
+  { action = ":qa <CR>", name = "Quit", section = "Quick Links"},
+}
+
 return {
   "echasnovski/mini.starter",
-  version = '',
+  event = "VimEnter",
+  version = "*",
   opts = {
+    items = items,
     header = header_art,
-    footer = '',
+    footer = date_today,
     evaluate_single = true,
   }
 }
