@@ -481,7 +481,7 @@ require('telescope').setup {
     frecency = {
       default_workspace = 'CWD',
       show_filter_column = false,
-      auto_validate = false,
+      auto_validate = true,
     }
   }
 }
