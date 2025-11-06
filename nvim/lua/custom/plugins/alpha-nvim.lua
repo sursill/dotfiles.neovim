@@ -39,6 +39,7 @@ return {
       return {
         dashboard.button('l', "󰒓  Lazy", ":Lazy<CR>"),
         dashboard.button('m', "󰒓  Mason", ":Mason<CR>"),
+        dashboard.button('d', "  Dadbod", ":ene <BAR> DBUI <CR>"),
       }
     end
 
