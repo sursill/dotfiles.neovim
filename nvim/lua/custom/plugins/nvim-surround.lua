@@ -13,10 +13,30 @@ return {
           add = function()
             local config = require("nvim-surround.config")
             local tag = config.get_input("Enter characters to surround: ")
+
             if tag then
-              return { { tag }, { string.reverse(tag) } }
+              local mirror_map = {
+                ["("] = ")", [")"] = "(",
+                ["["] = "]", ["]"] = "[",
+                ["{"] = "}", ["}"] = "{",
+                ["<"] = ">", [">"] = "<",
+              }
+
+              local function reverse_and_mirror(s)
+                local out = {}
+                for i = #s, 1, -1 do
+                  local ch = s:sub(i, i)
+                  out[#out + 1] = mirror_map[ch] or ch
+                end
+                return table.concat(out)
+              end
+
+              return { { tag }, { reverse_and_mirror(tag) } }
             end
           end
+        },
+        ["q"] = {
+          add = { "${", "}" },
         }
       }
     })
