@@ -13,6 +13,7 @@ return {
       virtual_symbol_prefix = ' ',
       virtual_symbol_suffix = '',
 
+      enable_named_colors = false,
       enable_tailwind = true,
     })
   end
