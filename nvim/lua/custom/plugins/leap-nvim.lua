@@ -1,8 +1,8 @@
 -- leap.nvim
--- https://github.com/ggandor/leap.nvim
+-- https://codeberg.org/andyg/leap.nvim
 
 return {
-  "ggandor/leap.nvim",
+  "https://codeberg.org/andyg/leap.nvim",
   dependencies = {
     'tpope/vim-repeat',
   },
