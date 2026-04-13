@@ -7,6 +7,9 @@ local map = vim.api.nvim_set_keymap
 vim.opt.number = true
 vim.opt.relativenumber = true
 
+-- Add colorcolumn
+-- vim.opt.colorcolumn = "80"
+
 -- Set default tab value to be 4(?) spaces
 -- @deprecated The following is already taken care of tpope/vim-sleuth
 --
