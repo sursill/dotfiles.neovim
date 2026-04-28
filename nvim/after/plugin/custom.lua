@@ -124,3 +124,10 @@ vim.api.nvim_create_autocmd(
     group = RestoreCursorShapeOnExit
   }
 )
+
+-- Override filetypes
+vim.filetype.add({
+  extension = {
+    tf = "terraform"
+  }
+})
