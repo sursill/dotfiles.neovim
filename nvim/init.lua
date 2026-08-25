@@ -362,7 +362,7 @@ require('lazy').setup({
   -- Fuzzy Finder (files, lsp, etc)
   {
     'nvim-telescope/telescope.nvim',
-    branch = '0.1.x',
+    branch = 'master',
     dependencies = {
       'nvim-lua/plenary.nvim',
       -- Fuzzy Finder Algorithm which requires local dependencies to be built.
@@ -383,8 +383,10 @@ require('lazy').setup({
   {
     -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
+    branch = 'main',
+    lazy = false,
     dependencies = {
-      'nvim-treesitter/nvim-treesitter-textobjects',
+      { 'nvim-treesitter/nvim-treesitter-textobjects', branch = 'main' },
     },
     build = ':TSUpdate',
   },
@@ -574,96 +576,80 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
 
 -- [[ Configure Treesitter ]]
--- See `:help nvim-treesitter`
--- Defer Treesitter setup after first render to improve startup time of 'nvim {filename}'
-vim.defer_fn(function()
-  require('nvim-treesitter.configs').setup {
-    -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = {
-      'go',
-      'lua',
-      'python',
-      'rust',
-      'tsx',
-      'typescript',
-      'javascript',
-      'vimdoc',
-      'vim',
-      'php',
-      'phpdoc',
-      'vue',
-      'json',
-      'yaml',
-      'toml',
-      'markdown',
-      'markdown_inline',
-    },
+-- nvim-treesitter's `main` branch targets Neovim 0.12+ and replaces the
+-- legacy `nvim-treesitter.configs` module with native Neovim APIs.
+local treesitter_languages = {
+  'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'javascript', 'vimdoc',
+  'vim', 'php', 'phpdoc', 'vue', 'json', 'yaml', 'toml', 'markdown',
+  'markdown_inline',
+}
 
-    -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
-    auto_install = false,
+require('nvim-treesitter').setup {
+  install_dir = vim.fn.stdpath('data') .. '/site',
+}
+-- `main` has no `ensure_installed`; install() is asynchronous and a no-op for
+-- parsers already installed in the configured install directory.
+require('nvim-treesitter').install(treesitter_languages)
 
-    highlight = { enable = true },
-    indent = { enable = true },
-    incremental_selection = {
-      enable = true,
-      keymaps = {
-        init_selection = '<c-space>',
-        node_incremental = '<c-space>',
-        scope_incremental = '<c-s>',
-        node_decremental = '<M-space>',
-      },
-    },
-    textobjects = {
-      select = {
-        enable = true,
-        lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
-        keymaps = {
-          -- You can use the capture groups defined in textobjects.scm
-          ['aa'] = '@parameter.outer',
-          ['ia'] = '@parameter.inner',
-          ['af'] = '@function.outer',
-          ['if'] = '@function.inner',
-          ['ac'] = '@class.outer',
-          ['ic'] = '@class.inner',
-        },
-      },
-      move = {
-        enable = true,
-        set_jumps = true, -- whether to set jumps in the jumplist
-        goto_next_start = {
-          [']m'] = '@function.outer',
-          [']]'] = '@class.outer',
-        },
-        goto_next_end = {
-          [']M'] = '@function.outer',
-          [']['] = '@class.outer',
-        },
-        goto_previous_start = {
-          ['[m'] = '@function.outer',
-          ['[['] = '@class.outer',
-        },
-        goto_previous_end = {
-          ['[M'] = '@function.outer',
-          ['[]'] = '@class.outer',
-        },
-      },
-      swap = {
-        enable = true,
-        swap_next = {
-          ['<leader>a'] = '@parameter.inner',
-        },
-        swap_previous = {
-          ['<leader>A'] = '@parameter.inner',
-        },
-      },
-    },
-  }
-end, 0)
+vim.api.nvim_create_autocmd('FileType', {
+  callback = function(args)
+    -- Use Neovim's native highlighter when a parser is available.
+    pcall(vim.treesitter.start, args.buf)
+  end,
+})
+
+local textobjects = require 'nvim-treesitter-textobjects'
+textobjects.setup {
+  select = { lookahead = true },
+  move = { set_jumps = true },
+}
+
+local select_textobject = require('nvim-treesitter-textobjects.select').select_textobject
+for lhs, query in pairs {
+  aa = '@parameter.outer',
+  ia = '@parameter.inner',
+  af = '@function.outer',
+  ['if'] = '@function.inner',
+  ac = '@class.outer',
+  ic = '@class.inner',
+} do
+  vim.keymap.set({ 'x', 'o' }, lhs, function()
+    select_textobject(query, 'textobjects')
+  end)
+end
+
+local move = require 'nvim-treesitter-textobjects.move'
+for lhs, spec in pairs {
+  [']m'] = { move.goto_next_start, '@function.outer' },
+  [']]'] = { move.goto_next_start, '@class.outer' },
+  [']M'] = { move.goto_next_end, '@function.outer' },
+  [']['] = { move.goto_next_end, '@class.outer' },
+  ['[m'] = { move.goto_previous_start, '@function.outer' },
+  ['[['] = { move.goto_previous_start, '@class.outer' },
+  ['[M'] = { move.goto_previous_end, '@function.outer' },
+  ['[]'] = { move.goto_previous_end, '@class.outer' },
+} do
+  vim.keymap.set({ 'n', 'x', 'o' }, lhs, function()
+    spec[1](spec[2], 'textobjects')
+  end)
+end
+
+local swap = require 'nvim-treesitter-textobjects.swap'
+vim.keymap.set('n', '<leader>a', function()
+  swap.swap_next '@parameter.inner'
+end)
+vim.keymap.set('n', '<leader>A', function()
+  swap.swap_previous '@parameter.inner'
+end)
+
+-- `incremental_selection` was removed from nvim-treesitter main; its legacy
+-- mappings (<C-Space>, <C-s>, <M-Space>) are intentionally not recreated here.
 
 -- [[ Configure LSP ]]
 -- Neovim 0.11+ configures and enables servers through its native LSP APIs.
 -- Mason installs tools; it does not own server setup or activation.
 local servers = {
+  ts_ls = {},
   lua_ls = {
     settings = {
       Lua = {
