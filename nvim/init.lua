@@ -650,6 +650,7 @@ end)
 -- Mason installs tools; it does not own server setup or activation.
 local servers = {
   ts_ls = {},
+  markdown_oxide = {},
   lua_ls = {
     settings = {
       Lua = {
@@ -697,6 +698,15 @@ local servers = {
 -- nvim-cmp supports additional completion capabilities, so apply them to every server.
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 vim.lsp.config('*', { capabilities = capabilities })
+-- Markdown Oxide dynamically registers workspace file watchers. This enables
+-- features such as creating unresolved links and completing unindexed blocks.
+vim.lsp.config('markdown_oxide', {
+  capabilities = vim.tbl_deep_extend('force', capabilities, {
+    workspace = {
+      didChangeWatchedFiles = { dynamicRegistration = true },
+    },
+  }),
+})
 
 local ensure_installed = vim.tbl_keys(servers)
 vim.list_extend(ensure_installed, { 'stylua' })
