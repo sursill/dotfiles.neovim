@@ -581,7 +581,7 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 
 local treesitter_languages = {
   'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'javascript', 'vimdoc',
   'vim', 'php', 'phpdoc', 'vue', 'json', 'yaml', 'toml', 'markdown',
-  'markdown_inline',
+  'markdown_inline', 'qmljs'
 }
 
 require('nvim-treesitter').setup {
@@ -590,6 +590,8 @@ require('nvim-treesitter').setup {
 -- `main` has no `ensure_installed`; install() is asynchronous and a no-op for
 -- parsers already installed in the configured install directory.
 require('nvim-treesitter').install(treesitter_languages)
+
+vim.treesitter.language.register('qmljs', 'qml')
 
 vim.api.nvim_create_autocmd('FileType', {
   callback = function(args)
