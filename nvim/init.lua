@@ -579,9 +579,24 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 
 -- nvim-treesitter's `main` branch targets Neovim 0.12+ and replaces the
 -- legacy `nvim-treesitter.configs` module with native Neovim APIs.
 local treesitter_languages = {
-  'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'javascript', 'vimdoc',
-  'vim', 'php', 'phpdoc', 'vue', 'json', 'yaml', 'toml', 'markdown',
-  'markdown_inline', 'qmljs'
+  'go',
+  'lua',
+  'python',
+  'rust',
+  'tsx',
+  'typescript',
+  'javascript',
+  'vimdoc',
+  'vim',
+  'php',
+  'phpdoc',
+  'vue',
+  'json',
+  'yaml',
+  'toml',
+  'markdown',
+  'markdown_inline',
+  'qmljs',
 }
 
 require('nvim-treesitter').setup {
