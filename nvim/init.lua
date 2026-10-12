@@ -594,6 +594,7 @@ local treesitter_languages = {
   'json',
   'yaml',
   'toml',
+  'terraform',
   'markdown',
   'markdown_inline',
   'qmljs',
@@ -668,6 +669,7 @@ end)
 local servers = {
   ts_ls = {},
   markdown_oxide = {},
+  terraform = {},
   lua_ls = {
     settings = {
       Lua = {
