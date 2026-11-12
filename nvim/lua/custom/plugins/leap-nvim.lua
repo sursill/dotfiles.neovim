@@ -7,6 +7,8 @@ return {
     'tpope/vim-repeat',
   },
   config = function ()
+    require('leap').opts.vim_opts['go.ignorecase'] = true
+
     -- Leap anywhere
     -- vim.keymap.set({'n', 'x', 'o'}, 's', '<Plug>(leap)')
     -- vim.keymap.set({'n', 'x', 'o'}, 'S', '<Plug>(leap)')
